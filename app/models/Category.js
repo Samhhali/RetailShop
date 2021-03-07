@@ -1,14 +1,14 @@
 const { Model, DataTypes } = require('sequelize');
-const { sequelize } = require('./Connection');
+const  {sequelize}  = require('./Connection');
 
-class Category extends Model {} // model is a table in the database
+(async ()=> {
 
-Category.init({
-  name: DataTypes.STRING,
-}, { sequelize, modelName: 'categories_test' });
+const Category= sequelize.define("category_test", {
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+});
 
-sequelize.sync();
-
-module.exports = {
-  Category
-}
+  await sequelize.sync({ force: true });
+})();
