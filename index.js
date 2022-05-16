@@ -1,9 +1,12 @@
-const {Product} = require('./app/models/Product');
-const {Category} = require('./app/models/Category');
+const { Product } = require("./app/models/Product");
+const { Category } = require("./app/models/Category");
 
 (async () => {
+  /**
+   * food_category
+   */
   const food_category = await Category.create({ name: "Food" });
-  const pro = await Product.create({ name: "Milk", price: 10});
+  const pro = await Product.create({ name: "Milk", price: 10 });
 
   await pro.setCategory(food_category);
 
