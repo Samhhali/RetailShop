@@ -1,51 +1,52 @@
-var express = require('express')
-var bodyParser = require('body-parser')
+var express = require("express");
+var bodyParser = require("body-parser");
 
-
-app = express()
+app = express();
 port = process.env.port || 3000;
 
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.listen(port)
+app.listen(port);
 
-console.log('task API server started on: ' + port)
-
+console.log("task API server started on: " + port);
 
 // Get all providers
-app.get('/providers', (req,res)=> {
-  pool.getConnection((err,connection)=>{
-     if(err) throw err
-     console.log('connected as id '+ connection.threadId)
-     connection.query('SELECT* from providers', (err,rows)=> {
-         connection.release()
+app.get("/providers", (req, res) => {
+  pool.getConnection((err, connection) => {
+    if (err) throw err;
+    console.log("connected as id " + connection.threadId);
+    connection.query("SELECT* from providers", (err, rows) => {
+      connection.release();
 
-         if(!err){
-              res.json(res.paginatedResult)
-         }else{
-             console.log(err)
-         }
-         console.log('the data from products are : \n', rows)
-     })
-  })
-})
+      if (!err) {
+        res.json(res.paginatedResult);
+      } else {
+        console.log(err);
+      }
+      console.log("the data from products are : \n", rows);
+    });
+  });
+});
 
 // Get Products in Specific category by CategoryID
-app.get('/products/:id', (req,res)=> {
-  pool.getConnection((err,connection)=>{
-     if(err) throw err
-     connection.query('SELECT* from products where CategoryID = ?',[req.params.id], (err,rows)=> {
-         connection.release()
-         if(!err){
-            res.json(res.paginatedResult)
-         }else{
-             console.log(err)
-         }
-     })
-  })
-})
-
+app.get("/products/:id", (req, res) => {
+  pool.getConnection((err, connection) => {
+    if (err) throw err;
+    connection.query(
+      "SELECT* from products where CategoryID = ?",
+      [req.params.id],
+      (err, rows) => {
+        connection.release();
+        if (!err) {
+          res.json(res.paginatedResult);
+        } else {
+          console.log(err);
+        }
+      }
+    );
+  });
+});
 
 // paginate
 function paginate(model) {
@@ -56,11 +57,13 @@ function paginate(model) {
     const endIndex = page * limit;
 
     const result = {};
+    // samahali on May 16, 2022 at 1:22 PM
+    // rename  this @Samah
     if (endIndex < model.length) {
       result.next = {
         page: page + 1,
         limit: limit,
-      };  
+      };
     }
     if (startIndex > 0) {
       result.previous = {
@@ -69,7 +72,7 @@ function paginate(model) {
       };
     }
     try {
-      result.results =  model.slice(startIndex, endIndex);
+      result.results = model.slice(startIndex, endIndex);
       res.paginatedResult = result;
       next();
     } catch (e) {
@@ -77,4 +80,3 @@ function paginate(model) {
     }
   };
 }
-
