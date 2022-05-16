@@ -56,6 +56,9 @@ function paginate(model) {
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
 
+    /**
+     * added description
+     */
     const result = {};
     // samahali on May 16, 2022 at 1:22 PM
     // rename  this @Samah
